@@ -15,5 +15,16 @@ export default defineAppConfig({
         },
       ],
     },
+    {
+      key: 1,
+      name: '开屏广告2',
+      activityIds: 'com.taou.maimai.MainActivity',
+      rules: [
+        {
+          matches: '[id="com.taou.maimai:id/skipBtnFullscreen"]',
+          snapshotUrls: 'https://gkd-kit.gitee.io/import/13160742',
+        },
+      ],
+    },
   ],
 });
