@@ -8,12 +8,14 @@ export default defineAppConfig({
       key: 0,
       name: '开屏广告',
       quickFind: true,
-      activityIds: [
-        'com.sina.weibo.MainTabActivity',
-        'com.sina.weibo.mobileads.view.', // 需要补充快照
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
+      rules: 'TextView[text="跳过"]',
+      snapshotUrls: [
+        'https://i.gkd.li/import/12782355',
+        'https://i.gkd.li/import/13194049',
       ],
-      rules: ['@RelativeLayout > TextView[text="跳过"]'],
-      snapshotUrls: 'https://i.gkd.li/import/12782355',
     },
     {
       key: 1,
@@ -35,7 +37,7 @@ export default defineAppConfig({
           '[id="com.sina.weibo:id/tv_name"][text="为何会看到此广告"]',
           '[id="com.sina.weibo:id/tv_name"][text="不感兴趣"]',
         ],
-        snapshotUrls: 'https://gkd-kit.gitee.io/import/12672985',
+        snapshotUrls: 'https://i.gkd.li/import/12672985',
       },
     },
     {
@@ -73,12 +75,12 @@ export default defineAppConfig({
         {
           matches:
             '[id="com.sina.weibo:id/left_img_container"] + LinearLayout >2 [id="com.sina.weibo:id/close"][clickable=true]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12673043',
+          snapshotUrls: 'https://i.gkd.li/import/12673043',
         },
         {
           matches:
             '[id="com.sina.weibo:id/corner_marker_view"] >2 [id="com.sina.weibo:id/right_top_tag"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12673051',
+          snapshotUrls: 'https://i.gkd.li/import/12673051',
         },
       ],
     },
@@ -91,9 +93,9 @@ export default defineAppConfig({
         {
           activityIds: ['com.sina.weibo.feed.DetailWeiboActivity'],
           matches:
-            'RelativeLayout[visibleToUser=true] - RelativeLayout >n [id="com.sina.weibo:id/tv_tips"] + [id="com.sina.weibo:id/iv_close_icon"]',
+            'RelativeLayout[visibleToUser=true] - RelativeLayout >n @[id="com.sina.weibo:id/ll_close"] > [id="com.sina.weibo:id/tv_tips"] + [id="com.sina.weibo:id/iv_close_icon"]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12674498',
+            'https://i.gkd.li/import/12674498',
             'https://i.gkd.li/import/13035647', // 限制 RelativeLayout[visibleToUser=true]，防止在这个快照中误触点赞按钮
           ],
         },
@@ -104,8 +106,8 @@ export default defineAppConfig({
           ],
           matches: 'TextView[text="不感兴趣"]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12674511',
-            'https://gkd-kit.gitee.io/import/12929591',
+            'https://i.gkd.li/import/12674511',
+            'https://i.gkd.li/import/12929591',
           ],
         },
       ],
@@ -117,7 +119,7 @@ export default defineAppConfig({
       activityIds: ['com.sina.weibo.MainTabActivity'],
       rules:
         '[id="com.sina.weibo:id/tvGuide"] + [id="com.sina.weibo:id/v_close"] + [id="com.sina.weibo:id/iv_close"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12705972'],
+      snapshotUrls: ['https://i.gkd.li/import/12705972'],
     },
     {
       key: 8,
@@ -126,7 +128,7 @@ export default defineAppConfig({
       activityIds: ['com.sina.weibo.page.ad.DiscoverAdDialog'],
       rules:
         '[id="com.sina.weibo:id/ad_portrait_layout"] + [id="com.sina.weibo:id/btn_close"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12705974'],
+      snapshotUrls: ['https://i.gkd.li/import/12705974'],
     },
     {
       enable: false,
@@ -137,7 +139,7 @@ export default defineAppConfig({
       activityIds: ['com.sina.weibo.notifyguidev2.NotifyGuideV2Activity'],
       rules:
         '@[id="com.sina.weibo:id/bt_cancel"][text="暂不开启"] + [id="com.sina.weibo:id/bt_confirm"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12705979'],
+      snapshotUrls: ['https://i.gkd.li/import/12705979'],
     },
     {
       enable: false,
@@ -148,7 +150,7 @@ export default defineAppConfig({
       activityIds: ['com.sina.weibo.MainTabActivity'],
       rules:
         '[text^="打开通知"] < LinearLayout + ImageView[id="com.sina.weibo:id/right_icon"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12705986'],
+      snapshotUrls: ['https://i.gkd.li/import/12705986'],
     },
     {
       enable: false,
@@ -171,23 +173,57 @@ export default defineAppConfig({
       snapshotUrls: ['https://i.gkd.li/import/12750090'],
     },
     {
-      enable: false,
       key: 13,
-      name: '右下角刷微博领现金悬浮广告',
+      name: '悬浮广告',
       desc: '自动点击x按钮',
       quickFind: true,
-      activityIds: ['com.sina.weibo.MainTabActivity'],
-      rules:
-        '[id="com.sina.weibo:id/floating_window"] >2 [id="com.sina.weibo:id/close"]',
-      snapshotUrls: ['https://i.gkd.li/import/12750118'],
+      activityIds: 'com.sina.weibo.MainTabActivity',
+      rules: [
+        {
+          key: 0,
+          matches:
+            '[id="com.sina.weibo:id/floating_window"] >2 [id="com.sina.weibo:id/close"]',
+          snapshotUrls: 'https://i.gkd.li/import/12750118',
+        },
+        {
+          key: 1,
+          matches:
+            '[id="com.sina.weibo:id/floating_window"] >n [id="com.sina.weibo:id/closeView"]',
+          snapshotUrls: 'https://i.gkd.li/import/13206775',
+        },
+        {
+          key: 2,
+          matches:
+            '[id="com.sina.weibo:id/tv_tag"] + @*[clickable=true] + [id="com.sina.weibo:id/countdown_btn_close"]',
+          snapshotUrls: 'https://i.gkd.li/import/13206841',
+        },
+      ],
     },
     {
       key: 14,
       name: '请求定位权限弹窗',
-      desc: '自动点击【以后再说】',
-      activityIds: 'com.sina.weibo.utils.WeiboDialog$CustomDialog',
-      rules: '@[text="以后再说"] + * + [text="去开启"]',
-      snapshotUrls: 'https://i.gkd.li/import/13003311',
+      quickFind: true,
+      rules: [
+        {
+          key: 0,
+          activityIds: [
+            'com.sina.weibo.MainTabActivity',
+            'com.sina.weibo.utils.WeiboDialog$CustomDialog',
+          ],
+          matches: '@[text="以后再说"] + * + [text="去开启"]',
+          snapshotUrls: [
+            'https://i.gkd.li/import/13218093',
+            'https://i.gkd.li/import/13003311',
+          ],
+        },
+        {
+          key: 1,
+          activityIds: 'com.sina.weibo.MainTabActivity',
+          matches:
+            '@[id="com.sina.weibo:id/btn_close"] +2 [text="使用您的位置信息"]',
+          snapshotUrls: 'https://i.gkd.li/import/13255595',
+        },
+      ],
     },
   ],
 });

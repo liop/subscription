@@ -7,9 +7,21 @@ export default defineAppConfig({
     {
       key: -1,
       name: '开屏广告',
-      desc: '空规则组-待实现',
-      activityIds: 'com.uc.browser.InnerUCMobile',
-      // TODO
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
+      quickFind: true,
+      rules: [
+        {
+          matches: '[id="com.byted.pangle:id/tt_splash_skip_btn"]',
+          snapshotUrls: 'https://i.gkd.li/import/13188653',
+        },
+        {
+          matches:
+            '@View[clickable=true] < RelativeLayout <2 FrameLayout < FrameLayout < FrameLayout <4 FrameLayout < [id="android:id/content"]',
+          snapshotUrls: 'https://i.gkd.li/import/13197655',
+        },
+      ],
     },
     {
       key: 0,

@@ -9,7 +9,10 @@ export default defineAppConfig({
       name: '开屏广告',
       quickFind: true,
       matchLauncher: true,
-      activityIds: ['com.youloft.icloser.splash.AdSplashActivity'],
+      activityIds: [
+        'com.youloft.icloser.splash.AdSplashActivity',
+        'com.youloft.icloser.splash.SplashActivity',
+      ],
       rules: [
         {
           matches: [
@@ -17,8 +20,9 @@ export default defineAppConfig({
             '[id="com.byted.pangle:id/tt_splash_skip_btn"]',
           ],
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12910405',
+            'https://i.gkd.li/import/12910405',
             'https://i.gkd.li/import/13072365',
+            'https://i.gkd.li/import/13175102',
           ],
         },
       ],
@@ -30,7 +34,15 @@ export default defineAppConfig({
       quickFind: true,
       activityIds: 'com.youloft.icloser.view.dialog.VipRetainPacketDialog',
       rules: '[id="com.youloft.icloser:id/tv_later_buy"]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/13067183',
+      snapshotUrls: 'https://i.gkd.li/import/13067183',
+    },
+    {
+      key: 2,
+      name: '右下角悬浮窗小广告',
+      quickFind: true,
+      activityIds: 'com.youloft.icloser.activity.MainActivity',
+      rules: '[id="com.youloft.icloser:id/iv_close"]',
+      snapshotUrls: 'https://i.gkd.li/import/13164387',
     },
   ],
 });

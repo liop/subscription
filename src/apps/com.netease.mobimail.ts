@@ -7,20 +7,27 @@ export default defineAppConfig({
     {
       key: 0,
       name: '开屏广告',
-      activityIds: 'com.netease.mail.ad.launch.ui.SplashAdActivity',
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
       rules: [
         {
-          matches: '[id="com.netease.mobimail:id/ad_skip"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12667519',
+          key: 0,
+          name: '开屏广告-0',
+          quickFind: true,
+          matches: '[text*="跳过"][text.length<=10][clickable=true]',
+          snapshotUrls: [
+            'https://i.gkd.li/import/12667519',
+            'https://i.gkd.li/import/13328425', // 限定 [clickable=true] 防止误触假的跳过按钮
+            'https://i.gkd.li/import/12686132',
+            'https://i.gkd.li/import/13328441',
+          ],
         },
         {
+          key: 1,
+          name: '开屏广告-1',
           matches: '[id="com.byted.pangle:id/tt_splash_skip_btn"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12686093',
-        },
-        {
-          matches:
-            '[id="com.netease.mobimail:id/ad_placeholder"] >5 TextView[text^="跳过"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12686132',
+          snapshotUrls: 'https://i.gkd.li/import/12686093',
         },
       ],
     },
@@ -31,12 +38,12 @@ export default defineAppConfig({
         {
           activityIds: 'com.netease.mail.biz.main.MainITabActivity',
           matches: '[id="com.netease.mobimail:id/ad_vip"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12683488',
+          snapshotUrls: 'https://i.gkd.li/import/12683488',
         },
         {
           activityIds: 'com.netease.mail.biz.main.MainITabActivity',
           matches: '[id="com.netease.mobimail:id/ll_delete"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12683511',
+          snapshotUrls: 'https://i.gkd.li/import/12683511',
         },
       ],
     },
@@ -45,7 +52,7 @@ export default defineAppConfig({
       name: '切回时的开屏广告',
       activityIds: 'com.netease.mail.biz.main.MainITabActivity',
       rules: '@LinearLayout > TextView[text^="跳过"]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12685745',
+      snapshotUrls: 'https://i.gkd.li/import/12685745',
     },
   ],
 });

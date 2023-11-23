@@ -9,17 +9,21 @@ export default defineAppConfig({
       name: '开屏广告',
       activityIds: ['com.eastmoney.android.berlin.activity.MainActivity'],
       rules: '[id="com.eastmoney.android.berlin:id/btn_skip"][text^="跳过"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12706071'],
+      snapshotUrls: ['https://i.gkd.li/import/12706071'],
     },
     {
       key: 1,
       name: '更新弹窗',
       activityIds: [
         'com.eastmoney.android.module.launcher.internal.home.HomeActivity',
+        'com.bbk.launcher2.Launcher',
       ],
       rules:
         '@[id="com.eastmoney.android.berlin:id/tv_update_next_time"] + [id="com.eastmoney.android.berlin:id/tv_update_now"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12706070'],
+      snapshotUrls: [
+        'https://i.gkd.li/import/12706070', //com.eastmoney.android.module.launcher.internal.home.HomeActivity
+        'https://i.gkd.li/import/13399156', //com.bbk.launcher2.Launcher
+      ],
     },
     {
       enable: true,
@@ -30,7 +34,7 @@ export default defineAppConfig({
       ],
       rules:
         '[id="com.eastmoney.android.berlin:id/push_on_notify_on"] + [id="com.eastmoney.android.berlin:id/push_on_notify_delete"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12706065'],
+      snapshotUrls: ['https://i.gkd.li/import/12706065'],
     },
   ],
 });

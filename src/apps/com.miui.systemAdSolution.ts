@@ -13,9 +13,17 @@ export default defineAppConfig({
     {
       key: 1,
       name: 'miui-为什么不希望看到这条推广',
-      desc: '关闭这个提示',
-      activityIds: 'com.xiaomi.ad.feedback',
-      rules: '[id=`com.miui.systemAdSolution:id/no_interest`]',
+      desc: '点击【不感兴趣】',
+      activityIds: [
+        'com.xiaomi.ad.feedback',
+        'com.android.thememanager.module.detail.view.ThemeDetailActivity',
+        'com.android.thememanager.ThemeResourceProxyTabActivity',
+      ],
+      rules: '[id="com.miui.systemAdSolution:id/no_interest"]',
+      snapshotUrls: [
+        'https://i.gkd.li/import/13227328', // com.android.thememanager.module.detail.view.ThemeDetailActivity
+        'https://i.gkd.li/import/13255751', // com.android.thememanager.ThemeResourceProxyTabActivity
+      ],
     },
   ],
 });

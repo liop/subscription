@@ -18,15 +18,33 @@ export default defineAppConfig({
           snapshotUrls: [
             'https://i.gkd.li/import/12840903',
             'https://i.gkd.li/import/12842279',
-            'https://gkd-kit.gitee.io/import/12864810', //需避免点击正常情况下的app menu
+            'https://i.gkd.li/import/12864810', //需避免点击正常情况下的app menu
           ],
         },
         {
           key: 1,
-          activityIds:
+          activityIds: [
             'com.taptap.game.discovery.impl.findgame.allgame.dialog.FindGameMenuDialog',
+            'com.taptap.other.basic.impl.TapMainActivity',
+          ],
           matches: '@LinearLayout > [text="对此内容不感兴趣"]',
-          snapshotUrls: 'https://i.gkd.li/import/12840904',
+          snapshotUrls: [
+            'https://i.gkd.li/import/12840904',
+            'https://i.gkd.li/import/13258679', //other.basic.impl.TapMainActivity
+          ],
+        },
+      ],
+    },
+    {
+      key: 3,
+      name: '更新提示',
+      quickFind: true,
+      activityIds: 'com.taptap.upgrade.library.dialog.UpgradeDialogAct',
+      rules: [
+        {
+          matches:
+            '@[id="com.taptap.app.game:id/btn_dismiss"] - LinearLayout >n [text="立即更新"]',
+          snapshotUrls: 'https://i.gkd.li/import/13387479',
         },
       ],
     },

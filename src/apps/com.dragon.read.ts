@@ -5,6 +5,20 @@ export default defineAppConfig({
   name: '番茄免费小说',
   groups: [
     {
+      key: -1,
+      name: '开屏广告',
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
+      quickFind: true,
+      rules: [
+        {
+          matches: '[text="跳过广告"]',
+          snapshotUrls: 'https://i.gkd.li/import/13210844',
+        },
+      ],
+    },
+    {
       key: 0,
       name: '阅读页面底部广告',
       activityIds: [
@@ -22,8 +36,11 @@ export default defineAppConfig({
         },
         {
           matches:
-            '[id="com.dragon.read:id/root_view"] >n ViewGroup > @FrameLayout[id!=null][clickable=true] > ImageView',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12716444',
+            '[id="com.dragon.read:id/root_view"] >n ViewGroup[childCount=4] > @FrameLayout[id!=null][clickable=true][childCount=1] > ImageView[visibleToUser=true]',
+          snapshotUrls: [
+            'https://i.gkd.li/import/12716444',
+            'https://i.gkd.li/import/13062909', // 误触
+          ],
         },
       ],
     },
@@ -32,15 +49,25 @@ export default defineAppConfig({
       name: '更新弹窗',
       activityIds: 'com.dragon.read.update',
       rules: '@[text="以后再说"] + [text="优先体验"]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12716477',
+      snapshotUrls: 'https://i.gkd.li/import/12716477',
     },
     {
       key: 2,
-      name: '右侧悬浮红包',
-      activityIds: 'com.dragon.read.pages.main.MainFragmentActivity',
-      rules:
-        '[id="android:id/content"] > FrameLayout > RelativeLayout[childCount=1][clickable=true] > RelativeLayout[childCount=3] > ImageView[id!=null][clickable=true]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12716506',
+      name: '首页右侧悬浮广告',
+      activityIds: [
+        'com.dragon.read.pages.main.MainFragmentActivity',
+        'com.dragon.read.ad.openingscreenad.OpeningScreenADActivity',
+      ],
+      rules: [
+        {
+          matches:
+            '[id="android:id/content"] > FrameLayout[childCount=1] > RelativeLayout[childCount=1] >2 ImageView[id!=null][clickable=true]',
+          snapshotUrls: [
+            'https://i.gkd.li/import/12716506', //relativeLayout和ImageView之间是RelativeLayoutRelativeLayout
+            'https://i.gkd.li/import/13318796', //relativeLayout和ImageView之间是ViewGroup
+          ],
+        },
+      ],
     },
     {
       key: 3,
@@ -57,6 +84,19 @@ export default defineAppConfig({
       ],
     },
     {
+      key: 4,
+      name: '阅读页面_关注作者',
+      quickFind: true,
+      rules: [
+        {
+          key: 0,
+          activityIds: 'com.dragon.read.reader.ui.ReaderActivity',
+          matches: '@ImageView +2 FrameLayout >3 [text="关注"]',
+          snapshotUrls: 'https://i.gkd.li/import/13399505',
+        },
+      ],
+    },
+    {
       enable: false,
       key: 10,
       name: '请求通知权限弹窗',
@@ -64,7 +104,7 @@ export default defineAppConfig({
       activityIds: 'com.dragon.read.widget.ConfirmDialogBuilder',
       rules:
         '@[text="取消"] < LinearLayout -2 LinearLayout > [text="开启推送提醒"]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12716592',
+      snapshotUrls: 'https://i.gkd.li/import/12716592',
     },
     {
       key: 11,
@@ -74,7 +114,16 @@ export default defineAppConfig({
       activityIds: 'com.dragon.read.pages.main.MainFragmentActivity',
       rules:
         '@ImageView[clickable=true] <2 LinearLayout[childCount=2] < [id="android:id/content"][childCount=1]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12878266',
+      snapshotUrls: 'https://i.gkd.li/import/12878266',
+    },
+    {
+      key: 12,
+      name: '关闭阅读-全屏广告',
+      desc: '点击右上角【关闭】',
+      quickFind: true,
+      activityIds: 'com.dragon.read.reader.ui.ReaderActivity',
+      rules: 'TextView[text="广告"] +2 Button[id="com.dragon.read:id/close"]',
+      snapshotUrls: 'https://i.gkd.li/import/13191156',
     },
   ],
 });

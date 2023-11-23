@@ -1,11 +1,13 @@
 # QQ
 
-存在 17 规则组 - [com.tencent.mobileqq](/src/apps/com.tencent.mobileqq.ts)
+存在 19 规则组 - [com.tencent.mobileqq](/src/apps/com.tencent.mobileqq.ts)
 
 ## 开屏广告
 
 - [快照-0](https://i.gkd.li/import/13062244)
 - [快照-1](https://i.gkd.li/import/13093155)
+- [快照-2](https://i.gkd.li/import/13207731)
+- [快照-3](https://i.gkd.li/import/13217807)
 
 ## 消息页面-顶部广告
 
@@ -13,44 +15,52 @@
 
 - [快照-0](https://i.gkd.li/import/12892726)
 - [快照-1](https://i.gkd.li/import/12774870)
+- [快照-2](https://i.gkd.li/import/13207766)
+- [快照-3](https://i.gkd.li/import/13386518)
+- [快照-4](https://i.gkd.li/import/13426912)
 
 ## 好友动态-广告卡片
 
+默认禁用
+
 - [快照-0](https://i.gkd.li/import/12847842)
-- [快照-1](https://gkd-kit.gitee.io/import/12840889)
+- [快照-1](https://i.gkd.li/import/12840889)
 
 ## 频道页面广告
 
-- [快照-0](https://gkd-kit.gitee.io/import/12642081)
-- [快照-1](https://gkd-kit.gitee.io/import/12708844)
+- [快照-0](https://i.gkd.li/import/13206663)
+- [快照-1](https://i.gkd.li/import/12642081)
+- [快照-2](https://i.gkd.li/import/12708844)
 
 ## 顶部SVIP广告
 
 默认禁用 - 消息界面-搜索框和消息记录之间的广告卡片,点击关闭右侧x
 
-- [快照-0](https://gkd-kit.gitee.io/import/12706907)
-- [快照-1](https://gkd-kit.gitee.io/import/13107298)
+- [快照-0](https://i.gkd.li/import/12706907)
+- [快照-1](https://i.gkd.li/import/13107298)
 - [快照-2](https://i.gkd.li/import/12793359)
 - [快照-3](https://i.gkd.li/import/12855048)
+- [快照-4](https://i.gkd.li/import/13228108)
 
 ## 好友热播
 
 默认禁用 - 好友动态中的好友热播，自动选择“减少好友热播” - 默认关闭
 
-- [快照-0](https://gkd-kit.gitee.io/import/12721427)
+- [快照-0](https://i.gkd.li/import/12721427)
 - [快照-1](https://i.gkd.li/import/12894359)
-- [快照-2](https://gkd-kit.gitee.io/import/12721433)
+- [快照-2](https://i.gkd.li/import/12721433)
 - [快照-3](https://i.gkd.li/import/12894375)
 
 ## 动态广告卡片
 
 点击右上角[广告]右侧的x按钮直接关闭
 
-- [快照-0](https://gkd-kit.gitee.io/import/12749584)
+- [快照-0](https://i.gkd.li/import/12749584)
 
 ## 扫一扫-登录确认
 
 - [快照-0](https://i.gkd.li/import/12789287)
+- [快照-1](https://i.gkd.li/import/13166314)
 
 ## 消息页面顶部-无法接收新消息通知
 
@@ -66,8 +76,9 @@
 
 默认禁用 - 发送图片时自动勾选原图
 
-- [快照-0](https://gkd-kit.gitee.io/import/12705556)
-- [快照-1](https://gkd-kit.gitee.io/import/12705559)
+- [快照-0](https://i.gkd.li/import/12705556)
+- [快照-1](https://i.gkd.li/import/12705559)
+- [快照-2](https://i.gkd.li/import/13295142)
 
 ## 自动查看原图
 
@@ -97,11 +108,27 @@
 
 ## 好友动态-为你推荐
 
+默认禁用
+
 - [快照-0](https://i.gkd.li/import/12929620)
-- [快照-1](https://i.gkd.li/import/12929619)
+- [快照-1](https://i.gkd.li/import/13387606)
+- [快照-2](https://i.gkd.li/import/12929619)
+- [快照-3](https://i.gkd.li/import/13387605)
 
 ## NT QQ-登录确认
 
 NT QQ 登录时自动点击允许登录QQ
 
-- [快照-0](https://gkd-kit.gitee.io/import/13063027)
+- [快照-0](https://i.gkd.li/import/13063027)
+
+## 更新弹窗
+
+- [快照-0](https://i.gkd.li/import/13188721)
+- [快照-1](https://i.gkd.li/import/13386719)
+
+## 消息页面-顶部更新提示
+
+默认禁用
+
+- [快照-0](https://i.gkd.li/import/13188722)
+- [快照-1](https://i.gkd.li/import/13255493)

@@ -1,27 +1,34 @@
 # 饿了么
 
-存在 5 规则组 - [me.ele](/src/apps/me.ele.ts)
+存在 6 规则组 - [me.ele](/src/apps/me.ele.ts)
 
 ## 开屏广告
 
 - [快照-0](https://i.gkd.li/import/12534930)
 
-## 更新弹窗
+## 版本更新
 
-- [快照-0](https://gkd-kit.gitee.io/import/12650280)
+- [快照-0](https://i.gkd.li/import/12650280)
+- [快照-1](https://i.gkd.li/import/13206819)
 
-## 开屏红包弹窗
+## 红包弹窗
 
-默认禁用
+- [快照-0](https://i.gkd.li/import/12650238)
+- [快照-1](https://i.gkd.li/import/13294893)
+- [快照-2](https://i.gkd.li/import/13331361)
+- [快照-3](https://i.gkd.li/import/13362974)
+- [快照-4](https://i.gkd.li/import/13376008)
+- [快照-5](https://i.gkd.li/import/12650713)
 
-- [快照-0](https://gkd-kit.gitee.io/import/12650238)
-
-## 超市便利页面-红包弹窗
-
-默认禁用
-
-- [快照-0](https://gkd-kit.gitee.io/import/12650713)
-
-## 首页活动弹窗
+## 活动弹窗
 
 - [快照-0](https://i.gkd.li/import/12726709)
+- [快照-1](https://i.gkd.li/import/13362878)
+
+## 付款后广告弹窗
+
+- [快照-0](https://i.gkd.li/import/13205301)
+
+## 吃货卡续费弹窗
+
+- [快照-0](https://i.gkd.li/import/13295007)

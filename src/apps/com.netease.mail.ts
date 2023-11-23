@@ -7,33 +7,28 @@ export default defineAppConfig({
     {
       key: 0,
       name: '开屏广告',
-      matchLauncher: true,
       quickFind: true,
-      activityIds: [
-        'com.netease.mail.biz.main.MainITabActivity',
-        'com.netease.mail.biz.main.SplashActivity',
-        'com.netease.mail.ad.launch.ui.SplashAdActivity',
-        'com.netease.mail.biz.main.MainITabActivity',
-      ],
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
       rules: [
         {
           key: 0,
-          matches: '[id="com.netease.mail:id/ad_skip"]',
-          snapshotUrls: 'https://i.gkd.li/import/12818335',
-        },
-        {
-          key: 1,
-          matches:
-            '[id="com.netease.mail:id/ad_placeholder"] >n [text^="跳过"]',
+          matches: '[text*="跳过"][text.length<=10]',
+          excludeMatches: '[id="com.netease.mail:id/ad_skip"][clickable=false]',
           snapshotUrls: [
             'https://i.gkd.li/import/12893573',
-            'https://i.gkd.li/import/12923776', // com.netease.mail.biz.main.SplashActivity
+            'https://i.gkd.li/import/12923776',
+            'https://i.gkd.li/import/13195662',
+            'https://i.gkd.li/import/12818335',
+            'https://i.gkd.li/import/13206298', // 使用 excludeMatches 防止提前触发规则
+            'https://i.gkd.li/import/13207736', // TODO 一整块图片，无法跳过
           ],
         },
         {
-          key: 2,
+          key: 1,
           matches: '[id="com.byted.pangle:id/tt_splash_skip_btn"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12999739',
+          snapshotUrls: 'https://i.gkd.li/import/12999739',
         },
       ],
     },
@@ -45,25 +40,27 @@ export default defineAppConfig({
       ],
       rules:
         '[id="com.netease.mail:id/tv_ignore_this_version"][text="暂不更新"]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12664070',
+      snapshotUrls: 'https://i.gkd.li/import/12664070',
     },
     {
       key: 2,
       name: '邮件列表广告',
       activityIds: ['com.netease.mail.biz.main.MainITabActivity'],
+      quickFind: true,
       rules: [
         {
           key: 0,
-          matches: '[id="com.netease.mail:id/ad_arrow"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12999833',
+          matches: '[id="com.netease.mail:id/ad_vip"]',
+          snapshotUrls: 'https://i.gkd.li/import/12999833',
         },
         {
+          preKeys: 0,
           key: 1,
           matches: '[id="com.netease.mail:id/ll_delete"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12999841',
+          snapshotUrls: 'https://i.gkd.li/import/12999841',
         },
       ],
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12664070',
+      snapshotUrls: 'https://i.gkd.li/import/12664070',
     },
   ],
 });

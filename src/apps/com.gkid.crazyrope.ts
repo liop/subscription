@@ -7,24 +7,22 @@ export default defineAppConfig({
     {
       key: 0,
       name: '开屏广告',
-      matchLauncher: true,
       quickFind: true,
-      activityIds: [
-        'com.gkid.crazyrope.ui.splash.StartPageActivity',
-        'com.gkid.crazyrope.ui.splash.SplashActivity',
-      ],
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
       rules: [
         {
           matches: '[id="com.byted.pangle.m:id/tt_splash_skip_btn"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12916417',
+          snapshotUrls: 'https://i.gkd.li/import/12916417',
         },
         {
-          matches: '[id="com.gkid.crazyrope:id/splash_tv_skip"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12985488',
-        },
-        {
-          matches: 'LinearLayout[childCount=2] > [text^="跳过"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/13028151',
+          matches: '[text^="跳过"][text.length<=10]',
+          snapshotUrls: [
+            'https://i.gkd.li/import/13028151',
+            'https://i.gkd.li/import/13195567',
+            'https://i.gkd.li/import/12985488',
+          ],
         },
       ],
     },
@@ -37,8 +35,23 @@ export default defineAppConfig({
       rules: [
         {
           matches: '[id="com.gkid.crazyrope:id/btn_close"][text="暂不需要"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12916419',
+          snapshotUrls: 'https://i.gkd.li/import/12916419',
         },
+      ],
+    },
+    {
+      key: 2,
+      name: '浮窗广告',
+      desc: '二步确认',
+      quickFind: true,
+      activityIds: 'com.gkid.crazyrope.ui.drillcommon.DrillActivity',
+      rules: [
+        '[id="com.gkid.crazyrope:id/iv_close"]',
+        '[id="com.gkid.crazyrope:id/tv_close"][text="关闭广告"]',
+      ],
+      snapshotUrls: [
+        'https://i.gkd.li/import/13262845',
+        'https://i.gkd.li/import/13262844',
       ],
     },
   ],

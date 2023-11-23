@@ -8,18 +8,18 @@ export default defineAppConfig({
       key: 0,
       name: '开屏广告',
       quickFind: true,
-      matchLauncher: true,
-      activityIds: [
-        'com.ss.android.article.news.activity.MainActivity',
-        'com.bytedance.ugc.UgcDetailInfoActivity',
-      ],
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
       rules: [
         {
-          matches: '[childCount=1] > [text="跳过广告"]',
+          matches: '[text*="跳过"][text.length<=10]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12684954',
-            'https://gkd-kit.gitee.io/import/12754759',
-            'https://gkd-kit.gitee.io/import/12840189',
+            'https://i.gkd.li/import/12684954',
+            'https://i.gkd.li/import/12754759',
+            'https://i.gkd.li/import/12840189',
+            'https://i.gkd.li/import/13174224',
+            'https://i.gkd.li/import/13402688',
           ],
         },
       ],
@@ -28,14 +28,36 @@ export default defineAppConfig({
       key: 1,
       name: '更新弹窗',
       matchLauncher: true,
-      activityIds: ['com.ss.android.mine.BaseSettingActivity'],
+      activityIds: [
+        'com.ss.android.mine.BaseSettingActivity',
+        'com.ss.android.article.base.feature.ugc.story.StoryVideoActivity',
+      ],
       rules: [
         {
           matches: '[text="升级版本"] +n [desc="关闭"][clickable=true]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12685000',
-            'https://gkd-kit.gitee.io/import/12840104',
+            'https://i.gkd.li/import/12685000',
+            'https://i.gkd.li/import/12840104',
+            'https://i.gkd.li/import/13316081',
           ],
+        },
+      ],
+    },
+    {
+      key: 2,
+      name: '浮窗广告',
+      quickFind: true,
+      activityIds: ['com.ss.android.article.news.activity.MainActivity'],
+      rules: [
+        {
+          matches:
+            '@ImageView < FrameLayout[childCount=2] < FrameLayout < FrameLayout <2 FrameLayout <4 [id="android:id/tabhost"]',
+          snapshotUrls: ['https://i.gkd.li/import/13262675'],
+        },
+        {
+          matches:
+            '@ImageView <2 FrameLayout < FrameLayout  < FrameLayout  <5 RelativeLayout < LinearLayout <2 ViewPager <2 FrameLayout < FrameLayout <3 [id="android:id/tabhost"]',
+          snapshotUrls: ['https://i.gkd.li/import/13274622'],
         },
       ],
     },
@@ -47,12 +69,12 @@ export default defineAppConfig({
       rules: [
         {
           matches: '[text^="开启通知"] + LinearLayout > [text="暂不开启"]',
-          snapshotUrls: ['https://gkd-kit.gitee.io/import/12706699'],
+          snapshotUrls: ['https://i.gkd.li/import/12706699'],
         },
         {
           matches:
             '[text^="开启通知"] < LinearLayout +2 ImageView[desc="关闭"]',
-          snapshotUrls: ['https://gkd-kit.gitee.io/import/12840217'],
+          snapshotUrls: ['https://i.gkd.li/import/12840217'],
         },
       ],
     },
@@ -64,15 +86,23 @@ export default defineAppConfig({
       activityIds: 'com.ss.android.ugc.detail.activity.TikTokActivity',
       rules: [
         {
+          key: -1,
+          preKeys: [0, 1, 2, 3],
+          name: '点击不感兴趣',
+          matches:
+            '@LinearLayout[clickable=true] > RelativeLayout + TextView[text="不感兴趣"]',
+          snapshotUrls: 'https://i.gkd.li/import/12679277',
+        },
+        {
           key: 0,
           name: '点击右上角[更多]图标按钮',
           matches:
             '@ImageView[clickable=true][desc="更多"] <n RelativeLayout -2 RelativeLayout >4 LynxFlattenUI[text="头条优惠券无门槛全平台通用"]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12679280',
-            'https://gkd-kit.gitee.io/import/12733282',
-            'https://gkd-kit.gitee.io/import/12763251',
-            'https://gkd-kit.gitee.io/import/12763252',
+            'https://i.gkd.li/import/12679280',
+            'https://i.gkd.li/import/12733282',
+            'https://i.gkd.li/import/12763251',
+            'https://i.gkd.li/import/12763252',
           ],
         },
         {
@@ -80,14 +110,21 @@ export default defineAppConfig({
           name: '点击右上角[更多]图标按钮-抖音直播',
           matches:
             '@ImageView[clickable=true][desc="更多"] <4 RelativeLayout -2 RelativeLayout >4 LinearLayout[childCount=3] > ScrollView[childCount=1] > TextView[text$="广告"][clickable=true]',
-          snapshotUrls: ['https://gkd-kit.gitee.io/import/12733281'],
+          snapshotUrls: ['https://i.gkd.li/import/12733281'],
         },
         {
-          preKeys: [0, 1],
-          name: '点击不感兴趣',
+          key: 2,
+          name: '第二种广告界面；点击右上角[更多]图标按钮',
           matches:
-            '@LinearLayout[clickable=true] > RelativeLayout + TextView[text="不感兴趣"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12679277',
+            '@ImageView[clickable=true][desc="更多"] <n RelativeLayout -2 RelativeLayout >n TextView[text$="广告"]',
+          snapshotUrls: ['https://i.gkd.li/import/13185633'],
+        },
+        {
+          key: 3,
+          name: '第三种广告界面；点击右上角[更多]图标按钮',
+          matches:
+            '@ImageView[clickable=true][desc="更多"] <n RelativeLayout +2 LinearLayout > TextView[text$="广告"]',
+          snapshotUrls: ['https://i.gkd.li/import/13186082'],
         },
       ],
     },
@@ -108,14 +145,14 @@ export default defineAppConfig({
             '[text^="广告"|| text$="广告" ||text^="来自"] <n FrameLayout > UIView[text^="不感兴趣"]',
           action: 'clickCenter',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12733098',
-            'https://gkd-kit.gitee.io/import/12755264',
-            'https://gkd-kit.gitee.io/import/12836272',
-            'https://gkd-kit.gitee.io/import/12840162',
-            'https://gkd-kit.gitee.io/import/13093576',
+            'https://i.gkd.li/import/12733098',
+            'https://i.gkd.li/import/12755264',
+            'https://i.gkd.li/import/12836272',
+            'https://i.gkd.li/import/12840162',
+            'https://i.gkd.li/import/13093576',
           ],
           exampleUrls: [
-            'https://user-images.githubusercontent.com/44717382/273436460-cf007525-81ce-418b-ac05-3bfd75a627fe.gif', //这是 https://gkd-kit.gitee.io/import/12840162
+            'https://user-images.githubusercontent.com/44717382/273436460-cf007525-81ce-418b-ac05-3bfd75a627fe.gif', //这是 https://i.gkd.li/import/12840162
           ],
         },
         {
@@ -125,9 +162,47 @@ export default defineAppConfig({
             '@ViewGroup[clickable=true] > ImageView + TextView[text="不感兴趣"]',
           action: 'clickCenter',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12733152',
-            'https://gkd-kit.gitee.io/import/12755265',
+            'https://i.gkd.li/import/12733152',
+            'https://i.gkd.li/import/12755265',
           ],
+        },
+      ],
+    },
+    {
+      enable: false,
+      key: 13,
+      name: '底部话题推荐弹窗',
+      activityIds: ['com.ss.android.article.news.activity.MainActivity'],
+      rules: [
+        {
+          name: '话题谈论',
+          matches:
+            'FlattenUIText[text="参与讨论"] + FlattenUIImage[clickable=true]',
+          snapshotUrls: ['https://i.gkd.li/import/12706699'],
+        },
+      ],
+    },
+    {
+      enable: false,
+      key: 14,
+      name: '自动观看广告视频',
+      desc: '自动观看广告并等待30s后关闭',
+      quickFind: true,
+      rules: [
+        {
+          key: 0,
+          name: '点击【看视频】',
+          activityIds: 'com.ss.android.article.news.activity.MainActivity',
+          matches:
+            '[id="com.bytedance.novel.api:id/component_ad_dialog_button_video"]',
+          snapshotUrls: 'https://i.gkd.li/import/13402468',
+        },
+        {
+          name: '等待30s点击【关闭】',
+          actionDelay: 30000,
+          activityIds: 'com.ss.android.excitingvideo.ExcitingVideoActivity',
+          matches: 'UIText[text="广告"] +n UIText[text="关闭"]',
+          snapshotUrls: 'https://i.gkd.li/import/13402480',
         },
       ],
     },

@@ -9,7 +9,7 @@ export default defineAppConfig({
       name: '开屏广告',
       activityIds: ['com.lphtsccft.zhangle.startup.SplashScreenActivity'],
       rules: '[id="com.lphtsccft:id/countdown_skip"][text="跳过"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12699286'],
+      snapshotUrls: ['https://i.gkd.li/import/12699286'],
     },
     {
       key: 1,
@@ -20,17 +20,16 @@ export default defineAppConfig({
       ],
       rules: '[id="com.lphtsccft:id/tv_never"][text="不再提醒"]',
       snapshotUrls: [
-        'https://gkd-kit.gitee.io/import/12646899',
-        'https://gkd-kit.gitee.io/import/12646925',
+        'https://i.gkd.li/import/12646899',
+        'https://i.gkd.li/import/12646925',
       ],
     },
     {
       key: 2,
       name: '更新弹窗',
-      activityIds: ['com.lphtsccft.zhangle.main.MainActivity'],
-      rules:
-        '@[id="com.lphtsccft:id/dialog_btn_left"][text="取消"] + [id="com.lphtsccft:id/dialog_btn_right"][text="确定"]',
-      snapshotUrls: ['https://gkd-kit.gitee.io/import/12699308'],
+      activityIds: 'com.lphtsccft.zhangle.main.MainActivity',
+      rules: '[text*="升级体验"] +2 LinearLayout > [text="取消"]',
+      snapshotUrls: 'https://i.gkd.li/import/12699308',
     },
     {
       key: 3,

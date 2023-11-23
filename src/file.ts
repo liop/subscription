@@ -2,6 +2,7 @@ import _ from 'lodash';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseSelector } from './selector';
+import type PkgT from '../package.json';
 import type { AppConfig, IArray, SubscriptionConfig } from './types';
 
 const iArrayToArray = <T>(array: IArray<T> = []): T[] => {
@@ -15,12 +16,35 @@ const sortKeys: (keyof SubscriptionConfig)[] = [
   'author',
   'supportUri',
   'updateUrl',
+  'checkUpdateUrl',
   'apps',
 ];
 
-export const writeConfig = async (fp: string, config: SubscriptionConfig) => {
+const orderdStringify = (
+  obj: any,
+  keys: string[],
+  replacer?: (this: any, key: string, value: any) => any,
+  space?: string | number,
+) => {
+  const map = new Map<string, unknown>();
+  keys.forEach((k) => {
+    if (obj[k] === undefined) return;
+    map.set(k, obj[k]);
+  });
+  return (
+    JSON.stringify(Object.fromEntries(map.entries()), replacer, space) + '\n'
+  );
+};
+const pkg: typeof PkgT = JSON.parse(
+  await fs.readFile(process.cwd() + '/package.json', 'utf-8'),
+);
+const pkgKeys = Object.keys(pkg);
+
+export const writeConfig = async (config: SubscriptionConfig) => {
+  const gkdFp = process.cwd() + '/dist/gkd.json';
+  const versionFp = process.cwd() + '/dist/gkd.version.json';
   const oldConfig: SubscriptionConfig = JSON.parse(
-    await fs.readFile(fp, 'utf-8').catch(() => '{}'),
+    await fs.readFile(gkdFp, 'utf-8').catch(() => '{}'),
   );
 
   const newConfig: SubscriptionConfig = {
@@ -31,33 +55,53 @@ export const writeConfig = async (fp: string, config: SubscriptionConfig) => {
   checkConfig(newConfig);
 
   const hasUpdate = !_.isEqual(newConfig, oldConfig);
-  if (hasUpdate) {
-    newConfig.version++;
-  }
-
-  // update md
-  await updateReadMeMd(newConfig);
-  console.log('更新文档');
-
   if (!hasUpdate) {
-    console.log('没有检测到规则变化,跳过更新JSON');
+    console.log('暂无规则变化');
     return;
   }
 
-  // keep json key sort by map
-  const map = new Map<string, unknown>();
-  sortKeys.forEach((k) => {
-    if (newConfig[k] === undefined) return;
-    map.set(k, newConfig[k]);
-  });
-  const buffer = Buffer.from(
-    JSON.stringify(Object.fromEntries(map.entries())),
+  newConfig.version++;
+
+  // update md
+  await updateReadMeMd(newConfig, oldConfig);
+
+  // update package.json
+  pkg.version = `1.${newConfig.version}.0`;
+  await fs.writeFile(
+    process.cwd() + '/package.json',
+    orderdStringify(pkg, pkgKeys, undefined, 2),
     'utf-8',
   );
-  await fs.writeFile(fp, buffer);
+
+  // update gkd.json
+  const buffer = Buffer.from(orderdStringify(newConfig, sortKeys), 'utf-8');
+  await fs.writeFile(gkdFp, buffer);
+
+  // update gkd.openad.json
+  const onlyOpenAdConfig = _.cloneDeep(newConfig);
+  onlyOpenAdConfig.apps.forEach((a) => {
+    a.groups?.forEach((g) => {
+      g.enable = g.name.startsWith('开屏广告');
+    });
+  });
+  await fs.writeFile(
+    process.cwd() + '/dist/gkd.openad.json',
+    orderdStringify(onlyOpenAdConfig, sortKeys),
+    'utf-8',
+  );
+
+  // update gkd.version.json
+  await fs.writeFile(
+    versionFp,
+    JSON.stringify(
+      { id: newConfig.id, version: newConfig.version },
+      undefined,
+      2,
+    ),
+  );
 
   console.log(
-    `更新订阅: 版本:${newConfig.version}, 文件大小: ${
+    `更新订阅: v${newConfig.version}, 文件大小: ${
       (buffer.length / 1024).toFixed(3) + 'KB'
     }`,
   );
@@ -172,7 +216,7 @@ export const checkConfig = (newConfig: SubscriptionConfig) => {
             groupKey: g.key,
           });
           throw new Error(
-            `invalid snapshotUrls: ${u}\nit should like https://gkd-kit.gitee.io/import/12506571`,
+            `invalid snapshotUrls: ${u}\nit should like https://i.gkd.li/import/12506571`,
           );
         }
       });
@@ -187,7 +231,7 @@ export const checkConfig = (newConfig: SubscriptionConfig) => {
               ruleKey: r.key,
             });
             throw new Error(
-              `invalid snapshotUrls: ${u}\nit should like https://gkd-kit.gitee.io/import/12506571`,
+              `invalid snapshotUrls: ${u}\nit should like https://i.gkd.li/import/12506571`,
             );
           }
         });
@@ -268,12 +312,22 @@ export const updateAppMd = async (app: AppConfig) => {
   const appMdText = [appHeadMdText, groupMdText].join('\n\n').trim() + '\n';
   await fs.writeFile(process.cwd() + `/docs/${app.id}.md`, appMdText, 'utf-8');
 };
-export const updateReadMeMd = async (newConfig: SubscriptionConfig) => {
+export const updateReadMeMd = async (
+  newConfig: SubscriptionConfig,
+  oldConfig: SubscriptionConfig,
+) => {
+  let changeCount = 0;
   await Promise.all(
     newConfig.apps.map(async (app) => {
-      await updateAppMd(app);
+      const oldApp = oldConfig.apps.find((a) => a.id == app.id);
+      if (!_.isEqual(oldApp, app)) {
+        await updateAppMd(app);
+        changeCount++;
+      }
     }),
   );
+  if (changeCount <= 0) return;
+  console.log('更新文档: ' + changeCount);
 
   const appListText =
     '| 名称 | ID | 规则组 |\n| - | - | - |\n' +
@@ -302,7 +356,14 @@ export const updateReadMeMd = async (newConfig: SubscriptionConfig) => {
         .reduce((p, c) => p + (c.groups?.length || 0), 0)
         .toString(),
     )
-    .replaceAll('--VERSION--', (newConfig.version || 0).toString())
-    .replaceAll('--APP_LIST--', appListText);
+    .replaceAll('--VERSION--', (newConfig.version || 0).toString());
   await fs.writeFile(process.cwd() + '/README.md', readMeMdText);
+  const appListTemplateMd = await fs.readFile(
+    process.cwd() + '/AppListTemplate.md',
+    'utf-8',
+  );
+  await fs.writeFile(
+    process.cwd() + '/AppList.md',
+    appListTemplateMd.replaceAll('--APP_LIST--', appListText),
+  );
 };

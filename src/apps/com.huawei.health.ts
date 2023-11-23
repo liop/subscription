@@ -7,12 +7,20 @@ export default defineAppConfig({
     {
       key: 0,
       name: '开屏广告',
-      activityIds: ['com.huawei.health.MainActivity'],
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
+      quickFind: true,
       rules: [
         {
-          matches: '[id="com.huawei.hms.ads.uiengine:id/hiad_skip_text"]',
+          key: 0,
+          matches: '[id$="hiad_skip_text"]',
           action: 'clickCenter',
-          snapshotUrls: ['https://gkd-kit.gitee.io/import/12667766'],
+          snapshotUrls: [
+            'https://i.gkd.li/import/12667766',
+            'https://i.gkd.li/import/13215012',
+            'https://i.gkd.li/import/13228290',
+          ],
         },
       ],
     },
@@ -23,7 +31,7 @@ export default defineAppConfig({
       rules: [
         {
           matches: '[id="com.huawei.health:id/item_banner_ad_close_icon"]',
-          snapshotUrls: ['https://gkd-kit.gitee.io/import/12667814'],
+          snapshotUrls: ['https://i.gkd.li/import/12667814'],
         },
       ],
     },

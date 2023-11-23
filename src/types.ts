@@ -1,17 +1,5 @@
 export type IArray<T> = T | T[];
 
-type NumberFilter = {
-  minimum?: number;
-  maximum?: number;
-  enum?: number[];
-};
-type StringFilter = {
-  pattern?: string;
-  maxLength?: number;
-  minLength?: number;
-  enum?: string[];
-};
-
 /**
  * 此类型任意属性如果是 undefined 则使用上级属性, 例如 rule.cd 是 undefined, 则 rule.cd 使用 group.cd
  */
@@ -24,6 +12,8 @@ type CommonProps = {
   activityIds?: IArray<string>;
 
   /**
+   * @deprecated 从 v1.5.0 已弃用
+   *
    * 匹配桌面的 activityId, 因为 activityId 在某些机器/应用上获取概率不准确
    *
    * 有时当出现 开屏广告 时, activityId 还是桌面的
@@ -39,7 +29,14 @@ type CommonProps = {
   /**
    * 单位: 毫秒
    *
-   * 当前规则的冷却时间
+   * 当前规则的冷却时间, 或者执行 action 最小间隔
+   *
+   */
+  actionCd?: number;
+
+  /**
+   * @deprecated
+   * 使用 actionCd
    */
   cd?: number;
 
@@ -48,8 +45,12 @@ type CommonProps = {
    *
    * 延迟执行: 查询到节点->等待一段时间->再次查询到节点则执行对应 action
    *
-   * 也许应该更名为 actionDelay
-   *
+   */
+  actionDelay?: number;
+
+  /**
+   * @deprecated
+   * 使用 actionDelay
    */
   delay?: number;
 
@@ -75,24 +76,73 @@ type CommonProps = {
    *
    * 但是在某些软件比如 哔哩哔哩 的开屏广告在这种耗时下延迟可达 1-2s, 这也是导致 [gkd-kit/gkd#60](https://github.com/gkd-kit/gkd/issues/60) 的原因
    *
+   * ---
+   *
+   * v1.4.1 版本后生成的快照时将标识每个节点是否可 quickFind, 网页审查工具属性面板顶部会注明这个标识
+   *
+   * [![image](https://github.com/gkd-kit/subscription/assets/38517192/80cdbad1-fa8d-4415-81a1-cecaa7d69e33)](https://i.gkd.li/import/13316168)
+   *
    */
   quickFind?: boolean;
 
   /**
-   * 后期估计会修改优化,暂不使用
+   * 单位: 毫秒
+   *
+   * 匹配延迟
+   *
+   * 规则准备匹配/或被唤醒时, 等待一段时间, 使此规则参与查询屏幕节点
+   *
    */
-  appFilter?: {
-    name?: StringFilter;
-    versionName?: StringFilter;
-    versionCode?: NumberFilter;
-  };
-  deviceFilter?: {
-    device?: StringFilter;
-    model?: StringFilter;
-    manufacturer?: StringFilter;
-    brand?: StringFilter;
-    sdkInt?: NumberFilter;
-    release?: StringFilter;
+  matchDelay?: number;
+
+  /**
+   * 单位: 毫秒
+   *
+   * 规则匹配时间, 此规则参与查询屏幕节点时, 等待一段时间, 休眠此规则
+   *
+   * 例如某些应用的 开屏广告 的 activityId 容易误触/太广泛, 而开屏广告几乎只在应用切出来时出现, 设置一个有限匹配时间能避免后续的误触
+   *
+   */
+  matchTime?: number;
+
+  /**
+   * 最大执行次数
+   *
+   * 规则的 action 被执行的最大次数, 达到最大次数时, 休眠此规则
+   *
+   * 功能类似 matchTime, 适用于只需要执行一次的: 开屏广告/更新弹窗/青少年弹窗 一类规则
+   *
+   * 当规则准备匹配/或被唤醒时, 将重新计算次数
+   *
+   */
+  actionMaximum?: number;
+
+  /**
+   * 默认值: `activity`
+   *
+   * 当规则因为 matchTime/actionMaximum 而休眠时, 如何唤醒此规则
+   *
+   * @example
+   * 'activity'
+   * // 当 activity 刷新时, 唤醒规则
+   * // 刷新 activity 并不代表 activityId 变化
+   * // 如 哔哩哔哩视频播放页 底部点击推荐视频 进入另一个 视频播放页, 进入了新 activity 但是 activityId 并没有变化
+   *
+   * @example
+   * 'app'
+   * // 重新进入 app 时, 唤醒规则
+   */
+  resetMatch?: 'activity' | 'app';
+
+  // 暂未支持
+  filter?: {
+    /**
+     * 某些应用使用框架生成控件id, 如QQ/微信, 这些id只在相邻几个版本可使用
+     */
+    appVersionCode?: unknown;
+    screenHeight?: unknown;
+    screenWidth?: unknown;
+    isLandscape?: boolean;
   };
 };
 
@@ -156,7 +206,6 @@ type RuleConfig = {
   key?: number;
 
   name?: string;
-  desc?: string;
 
   /**
    * 一个或者多个合法的 GKD 选择器, 如果每个选择器都能匹配上节点, 那么点击最后一个选择器的目标节点
@@ -198,8 +247,49 @@ type RuleConfig = {
    * // 计算出此控件的中心的坐标并且如果这个坐标在屏幕内部，那么就向系统发起一个点击屏幕坐标事件
    * // 如果这个坐标不在屏幕内部, 当作未匹配
    * // 另外如果目标节点的位置被其它节点遮挡覆盖, 则会点击触发最上层的节点(可能不是目标节点)
+   *
+   * @example
+   * `back`
+   * // 向系统发起一个返回事件, 相当于按下返回键
+   *
+   * @example
+   * `longClick`
+   * // 如果目标节点是 longClickable 的, 则使用 `longClickNode`, 反之使用 `longClickCenter`
+   *
+   * @example
+   * `longClickNode`
+   * // 向系统发起一个长按无障碍节点事件，与 clickNode 类似
+   *
+   * @example
+   * `longClickCenter`
+   * // 与 clickCenter 类似, 长按时间为 400 毫秒
    */
-  action?: 'click' | 'clickNode' | 'clickCenter';
+  action?:
+    | 'click'
+    | 'clickNode'
+    | 'clickCenter'
+    | 'back'
+    | 'longClick'
+    | 'longClickNode'
+    | 'longClickCenter';
+
+  /**
+   * 与这个 key 的 rule 共享次数
+   *
+   * 比如开屏广告可能需要多个 rule 去匹配, 当一个 rule 触发时, 其它 rule 的触发是无意义的
+   *
+   * 如果你对这个 key 的 rule 设置 actionMaximum=1, 那么当这个 rule 和 本 rule 触发任意一个时, 两个 rule 都将进入休眠
+   */
+  actionMaximumKey?: number;
+
+  /**
+   * 与这个 key 的 rule 共享 cd
+   *
+   * 比如开屏广告可能需要多个 rule 去匹配, 当一个 rule 触发时, 其它 rule 的触发是无意义的
+   *
+   * 如果你对这个 key 的 rule 设置 actionCd=3000, 那么当这个 rule 和 本 rule 触发任意一个时, 在 3000毫秒 内两个 rule 都将进入 cd
+   */
+  actionCdKey?: number;
 
   snapshotUrls?: IArray<string>;
   exampleUrls?: IArray<string>;
@@ -233,8 +323,17 @@ export type SubscriptionConfig = {
 
   /**
    * APP 会定时或者用户手动请求这个链接, 如果返回的订阅的 version 大于 APP 订阅当前的 version , 则更新
+   *
+   * 如果这个字段不存在, 则使用添加订阅时填写的链接
    */
   updateUrl?: string;
+
+  /**
+   * 一个只需要 id 和 version 的 json 文件链接, 检测更新时, 优先检测此链接, 如果 id 相等并且 version 增加, 则再去请求 updateUrl
+   *
+   * 目的是防止订阅文件过大而消耗过多的流量
+   */
+  checkUpdateUrl?: string;
 
   /**
    * https url, custom android schema url

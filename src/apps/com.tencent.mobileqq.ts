@@ -8,11 +8,16 @@ export default defineAppConfig({
       key: 0,
       name: '开屏广告',
       quickFind: true,
-      activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
-      rules: '[childCount=5] > TextView[text="跳过"][clickable=true]',
+      matchTime: 10000,
+      actionMaximum: 1,
+      resetMatch: 'app',
+      rules: 'TextView[text^="跳过"][text.length<=10]',
+      excludeActivityIds: ['com.tencent.mobileqq.activity.ChatActivity'],
       snapshotUrls: [
         'https://i.gkd.li/import/13062244',
         'https://i.gkd.li/import/13093155',
+        'https://i.gkd.li/import/13207731',
+        'https://i.gkd.li/import/13217807', // 避免在聊天界面误触
       ],
     },
     {
@@ -22,14 +27,28 @@ export default defineAppConfig({
       desc: '规则误触,待修复,需要快照准确定位', // 当从聊天界面点击链接进入网页时会误触
       activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
       rules: [
-        '@[desc="关闭"][clickable=true] - LinearLayout > TextView[text!=null] + TextView[text!=null]', // 1687669217838
-      ],
-      snapshotUrls: [
-        'https://i.gkd.li/import/12892726',
-        'https://i.gkd.li/import/12774870',
+        {
+          key: 0,
+          matches:
+            'TextView[text!=null] < LinearLayout + ImageView[desc="关闭"]', // 原@语法会出现两个选项可能会导致误触
+          snapshotUrls: [
+            'https://i.gkd.li/import/12892726',
+            'https://i.gkd.li/import/12774870',
+            'https://i.gkd.li/import/13207766',
+            'https://i.gkd.li/import/13386518',
+          ],
+        },
+        {
+          key: 1,
+          name: '消息页面-顶部惊喜礼包',
+          matches:
+            '[text*="惊喜礼包"] + FrameLayout + ImageView[clickable=true]',
+          snapshotUrls: 'https://i.gkd.li/import/13426912',
+        },
       ],
     },
     {
+      enable: false,
       key: 2,
       name: '好友动态-广告卡片',
       activityIds: [
@@ -44,9 +63,10 @@ export default defineAppConfig({
         },
         {
           preKeys: 0,
+          quickFind: true,
           matches:
-            '[clickable=true] > ImageView + TextView[text="关闭此条广告"]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12840889',
+            '@[clickable=true] > ImageView + TextView[text="关闭此条广告"]',
+          snapshotUrls: 'https://i.gkd.li/import/12840889',
         },
       ],
     },
@@ -56,18 +76,24 @@ export default defineAppConfig({
       rules: [
         {
           name: '弹窗广告',
-          activityIds:
+          quickFind: true,
+          activityIds: [
+            'com.tencent.mobileqq.activity.SplashActivity',
             'com.tencent.qqlive.module.videoreport.inject.dialog.ReportDialog',
+          ],
           matches:
             'ImageView[id="com.tencent.mobileqq:id/close"][clickable=true]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12642081',
+          snapshotUrls: [
+            'https://i.gkd.li/import/13206663', // com.tencent.mobileqq.activity.SplashActivity
+            'https://i.gkd.li/import/12642081', // com.tencent.qqlive.module.videoreport.inject.dialog.ReportDialog
+          ],
         },
         {
           name: '右侧悬浮广告',
           activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
           matches:
             'FrameLayout[desc="发表帖子"] - LinearLayout[id!=null] >3 ImageView[id!=null][clickable=false] - View[id!=null][clickable=true]',
-          snapshotUrls: 'https://gkd-kit.gitee.io/import/12708844',
+          snapshotUrls: 'https://i.gkd.li/import/12708844',
         },
       ],
     },
@@ -78,12 +104,13 @@ export default defineAppConfig({
       desc: '消息界面-搜索框和消息记录之间的广告卡片,点击关闭右侧x',
       activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
       rules:
-        'LinearLayout > TextView[text*="SVIP"] + FrameLayout[childCount<=2] + [name$="ImageView"||name$="Button"][id!=null][clickable=true]',
+        'LinearLayout > TextView[text*="SVIP"||text*="超级会员"] + FrameLayout[childCount<=2] + [name$="ImageView"||name$="Button"][id!=null][clickable=true]',
       snapshotUrls: [
-        'https://gkd-kit.gitee.io/import/12706907',
-        'https://gkd-kit.gitee.io/import/13107298',
+        'https://i.gkd.li/import/12706907',
+        'https://i.gkd.li/import/13107298',
         'https://i.gkd.li/import/12793359',
         'https://i.gkd.li/import/12855048',
+        'https://i.gkd.li/import/13228108',
       ],
     },
     {
@@ -101,7 +128,7 @@ export default defineAppConfig({
           matches:
             'TextView[text="好友热播"] + Button[id^="com.tencent.mobileqq.qzone_df_impl:id/"][clickable=true]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12721427', // com.qzone.reborn.feedx.activity.QZoneFriendFeedXActivity
+            'https://i.gkd.li/import/12721427', // com.qzone.reborn.feedx.activity.QZoneFriendFeedXActivity
             'https://i.gkd.li/import/12894359', // com.tencent.mobileqq.activity.SplashActivity
           ],
         },
@@ -110,7 +137,7 @@ export default defineAppConfig({
           matches:
             'TextView[text="减少好友热播"] <2 LinearLayout < LinearLayout[id^="com.tencent.mobileqq.qzone_df_impl:id/"][clickable=true]',
           snapshotUrls: [
-            'https://gkd-kit.gitee.io/import/12721433', // com.qzone.reborn.feedx.activity.QZoneFriendFeedXActivity
+            'https://i.gkd.li/import/12721433', // com.qzone.reborn.feedx.activity.QZoneFriendFeedXActivity
             'https://i.gkd.li/import/12894375', // com.tencent.mobileqq.activity.SplashActivity
           ],
         },
@@ -123,15 +150,21 @@ export default defineAppConfig({
       activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
       rules:
         '@ImageView[clickable=true] - TextView[text="广告"] - [id="com.tencent.mobileqq:id/tv_name"]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/12749584',
+      snapshotUrls: 'https://i.gkd.li/import/12749584',
     },
     {
       key: 7,
       name: '扫一扫-登录确认',
       quickFind: true,
-      activityIds: 'com.tencent.biz.qrcode.activity.QRLoginAuthActivity',
+      activityIds: [
+        'com.tencent.biz.qrcode.activity.QRLoginAuthActivity',
+        'com.tencent.mobileqq.activity.DevLockQuickVerifyActivity',
+      ],
       rules: 'Button[text="拒绝"] - Button[text="登录"]',
-      snapshotUrls: 'https://i.gkd.li/import/12789287',
+      snapshotUrls: [
+        'https://i.gkd.li/import/12789287',
+        'https://i.gkd.li/import/13166314',
+      ],
     },
     {
       enable: false,
@@ -155,11 +188,15 @@ export default defineAppConfig({
       key: 10,
       name: '自动勾选原图',
       desc: '发送图片时自动勾选原图',
-      activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
+      activityIds: [
+        'com.tencent.mobileqq.activity.SplashActivity',
+        'com.tencent.qqnt.qbasealbum.WinkHomeActivity',
+      ],
       rules: '@CheckBox[checked=false] + [text="原图"]',
       snapshotUrls: [
-        'https://gkd-kit.gitee.io/import/12705556', // 未勾选原图
-        'https://gkd-kit.gitee.io/import/12705559', // 已勾选原图
+        'https://i.gkd.li/import/12705556', // 未勾选原图
+        'https://i.gkd.li/import/12705559', // 已勾选原图
+        'https://i.gkd.li/import/13295142', // com.tencent.qqnt.qbasealbum.WinkHomeActivity
       ],
     },
     {
@@ -229,21 +266,33 @@ export default defineAppConfig({
       ],
     },
     {
+      enable: false,
       key: 15,
       name: '好友动态-为你推荐',
-      activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
+      quickFind: true,
+      matchLauncher: true,
+      activityIds: [
+        'com.tencent.mobileqq.activity.SplashActivity',
+        'com.qzone.reborn.feedx.activity.QZoneFriendFeedXActivity',
+      ],
       rules: [
         {
           key: 0,
-          matches: '[text="为你推荐"] + ImageView[id!=null][clickable=true]',
-          snapshotUrls: 'https://i.gkd.li/import/12929620',
+          matches: '@ImageView[clickable=true] - [text="为你推荐"]',
+          snapshotUrls: [
+            'https://i.gkd.li/import/12929620',
+            'https://i.gkd.li/import/13387606', // activityIds: 'com.qzone.reborn.feedx.activity.QZoneFriendFeedXActivity',
+          ],
         },
         {
           preKeys: 0,
           key: 1,
           matches:
             '@LinearLayout[id!=null][clickable=true] > LinearLayout > [text="减少此类推荐"]',
-          snapshotUrls: 'https://i.gkd.li/import/12929619',
+          snapshotUrls: [
+            'https://i.gkd.li/import/12929619',
+            'https://i.gkd.li/import/13387605', // matchLauncher: true,
+          ],
         },
       ],
     },
@@ -253,7 +302,31 @@ export default defineAppConfig({
       desc: 'NT QQ 登录时自动点击允许登录QQ',
       activityIds: 'com.tencent.mobileqq.activity.DevlockQuickLoginActivity',
       rules: 'Button[text="允许登录QQ"][clickable=true][id!=null]',
-      snapshotUrls: 'https://gkd-kit.gitee.io/import/13063027',
+      snapshotUrls: 'https://i.gkd.li/import/13063027',
+    },
+    {
+      key: 17,
+      name: '更新弹窗',
+      activityIds: [
+        'com.tencent.mobileqq.upgrade',
+        'com.tencent.mobileqq.activity.SplashActivity',
+      ],
+      rules: '@[desc="关闭"] - ViewGroup > [text="发现新版本"]',
+      snapshotUrls: [
+        'https://i.gkd.li/import/13188721',
+        'https://i.gkd.li/import/13386719',
+      ],
+    },
+    {
+      enable: false,
+      key: 18,
+      name: '消息页面-顶部更新提示',
+      activityIds: 'com.tencent.mobileqq.activity.SplashActivity',
+      rules: 'TextView[text="发现QQ版本更新"] + ImageView[clickable=true]', //修正desc值为null时无法点击问题
+      snapshotUrls: [
+        'https://i.gkd.li/import/13188722',
+        'https://i.gkd.li/import/13255493', //desc值为null快照
+      ],
     },
   ],
 });
